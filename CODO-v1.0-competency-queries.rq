@@ -1,0 +1,90 @@
+# CODO v1.0: the six competency queries of the publication (Section 8).
+# Run against CODO-v1.0.ttl plus a populated graph, e.g. CODO-v1.0-test-graph.ttl.
+# Queries are separated by lines starting with "#### Q".
+
+#### Q1 Coordinated behaviour across content and actors (8.1)
+PREFIX dis: <https://ontology.cogops.eu/codo#>
+SELECT ?c1 ?c2 ?actor1 ?actor2
+WHERE {
+  ?c1 dis:coordinatedWith ?c2 ;
+      dis:hasAuthor ?actor1 .
+  ?c2 dis:hasAuthor ?actor2 .
+
+  ?a1 dis:assessedActor ?actor1 ;
+      dis:actorAssessmentMetric "CoordinatedBehaviour" ;
+      dis:actorAssessmentValue ?s1 .
+  ?a2 dis:assessedActor ?actor2 ;
+      dis:actorAssessmentMetric "CoordinatedBehaviour" ;
+      dis:actorAssessmentValue ?s2 .
+
+  FILTER(?s1 > 0.7 && ?s2 > 0.7 && ?actor1 != ?actor2)
+}
+
+#### Q2 Targeting institutions and decision processes (8.2)
+PREFIX dis: <https://ontology.cogops.eu/codo#>
+SELECT ?campaign ?target ?role ?confidence
+WHERE {
+  ?tr a dis:TargetingRelation ;
+      dis:targetingSource ?campaign ;
+      dis:targetedEntity ?target ;
+      dis:targetRole ?role ;
+      dis:targetingConfidence ?confidence .
+
+  FILTER(?role = "InstitutionalTarget" ||
+         ?role = "DecisionProcessTarget")
+}
+ORDER BY DESC(?confidence)
+
+#### Q3 Operational role versus measured network position (8.3)
+PREFIX dis: <https://ontology.cogops.eu/codo#>
+SELECT ?actor ?assignedRole ?measuredRole
+WHERE {
+  ?participation dis:participatingActor ?actor ;
+                 dis:participationRole ?assignedRole .
+
+  ?actor dis:actorHasNetworkPosition ?netpos .
+  ?netpos dis:networkPositionRole ?measuredRole .
+
+  FILTER(?assignedRole != "Amplifier" &&
+         ?measuredRole = "Amplifier")
+}
+
+#### Q4 Vulnerability-to-harm pathway (8.4)
+PREFIX dis: <https://ontology.cogops.eu/codo#>
+SELECT ?vuln ?effect ?outcome ?impact ?harm ?subcat
+WHERE {
+  ?vuln dis:vulnerabilityContributesToEffect ?effect .
+  ?effect dis:immediateEffectLeadsToOutcome ?outcome .
+  ?outcome dis:outcomeManifestsAsImpact ?impact .
+  ?impact dis:impactEscalatesToHarm ?harm .
+  ?harm dis:harmSubCategory ?subcat .
+}
+
+#### Q5 Context-specific topic exploitability (8.5)
+PREFIX dis: <https://ontology.cogops.eu/codo#>
+SELECT ?topic ?location ?score ?confidence
+WHERE {
+  ?assessment a dis:TopicAssessment ;
+     dis:assessedTopic ?topic ;
+     dis:assessmentContextLocation ?location ;
+     dis:topicExploitabilityScore ?score ;
+     dis:topicAssessmentConfidence ?confidence .
+
+  FILTER(?score > 0.7)
+}
+ORDER BY DESC(?score)
+
+#### Q6 Audience progression from intended to affected (8.6)
+PREFIX dis: <https://ontology.cogops.eu/codo#>
+SELECT ?campaign ?audienceType ?relType ?confidence
+WHERE {
+  ?campaign dis:audienceRelationshipInstance ?rel .
+
+  ?rel dis:audienceRelationshipType ?relType ;
+       dis:audienceRelationshipStageOrder ?stage ;
+       dis:audienceRelationshipConfidence ?confidence ;
+       dis:relationshipInvolvesAudience ?aud .
+
+  ?aud dis:audienceType ?audienceType .
+}
+ORDER BY ?stage

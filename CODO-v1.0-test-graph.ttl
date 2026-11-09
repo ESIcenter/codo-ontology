@@ -1,0 +1,81 @@
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix dis:  <https://ontology.cogops.eu/codo#> .
+@prefix ex:   <https://example.org/codo-test#> .
+
+# ===========================================================================
+#  CODO v1.0 test graph: a small, fictitious population that exercises the
+#  six competency scenarios of the CODO v1.0 publication. All entities are
+#  invented. Each block lists the scenario it serves and the expected result.
+# ===========================================================================
+
+# --- Scenario 1: coordinated behaviour (expected: one row, ex:post1/ex:post2) ---
+ex:post1 a dis:SocialPost ; dis:hasAuthor ex:actorA ; dis:coordinatedWith ex:post2 .
+ex:post2 a dis:SocialPost ; dis:hasAuthor ex:actorB .
+ex:post3 a dis:SocialPost ; dis:hasAuthor ex:actorC ; dis:coordinatedWith ex:post4 .   # actorC scores low: excluded
+ex:post4 a dis:SocialPost ; dis:hasAuthor ex:actorB .
+ex:actorA a dis:Person ; rdfs:label "Actor A" .
+ex:actorB a dis:Person ; rdfs:label "Actor B" .
+ex:actorC a dis:Person ; rdfs:label "Actor C" .
+ex:assessA a dis:ActorAssessment ; dis:assessedActor ex:actorA ;
+    dis:actorAssessmentMetric "CoordinatedBehaviour" ; dis:actorAssessmentValue "0.86"^^xsd:float ;
+    dis:actorAssessmentMethod "temporal co-posting analysis" ; dis:actorAssessmentConfidence "0.7"^^xsd:float .
+ex:assessB a dis:ActorAssessment ; dis:assessedActor ex:actorB ;
+    dis:actorAssessmentMetric "CoordinatedBehaviour" ; dis:actorAssessmentValue "0.91"^^xsd:float .
+ex:assessC a dis:ActorAssessment ; dis:assessedActor ex:actorC ;
+    dis:actorAssessmentMetric "CoordinatedBehaviour" ; dis:actorAssessmentValue "0.32"^^xsd:float .
+
+# --- Scenario 2: institutional and decision-process targeting (expected: two rows, 0.85 then 0.60) ---
+ex:campaign1 a dis:Campaign ; rdfs:label "Campaign 1" .
+ex:electoralCommission a dis:Institution ; rdfs:label "Electoral Commission" .
+ex:countingProcess a dis:Activity ; rdfs:label "Vote-counting process" .
+ex:publicAudience a dis:GeneralPublicAudience ; dis:audienceType "GeneralPublicAudience" .
+ex:tr1 a dis:TargetingRelation ; dis:targetingSource ex:campaign1 ; dis:targetedEntity ex:electoralCommission ;
+    dis:targetRole "InstitutionalTarget" ; dis:targetingConfidence "0.85"^^xsd:float .
+ex:tr2 a dis:TargetingRelation ; dis:targetingSource ex:campaign1 ; dis:targetedEntity ex:countingProcess ;
+    dis:targetRole "DecisionProcessTarget" ; dis:targetingConfidence "0.60"^^xsd:float .
+ex:tr3 a dis:TargetingRelation ; dis:targetingSource ex:campaign1 ; dis:targetedEntity ex:publicAudience ;
+    dis:targetRole "PrimaryTarget" ; dis:targetingConfidence "0.90"^^xsd:float .           # audience target: excluded
+
+# --- Scenario 3: operational role vs measured network position (expected: one row, Actor A) ---
+ex:part1 a dis:ActorParticipation ; dis:participatingActor ex:actorA ; dis:participationRelatedEntity ex:campaign1 ;
+    dis:participationRole "Coordinator" .
+ex:part2 a dis:ActorParticipation ; dis:participatingActor ex:actorB ; dis:participationRelatedEntity ex:campaign1 ;
+    dis:participationRole "Amplifier" .                                                    # role and position agree: excluded
+ex:actorA dis:actorHasNetworkPosition ex:np1 .
+ex:actorB dis:actorHasNetworkPosition ex:np2 .
+ex:np1 a dis:NetworkPositionAssertion ; dis:networkPositionRole "Amplifier" ;
+    dis:networkPositionNetwork "Test reposting network" ; dis:networkPositionMetric "betweenness centrality" ;
+    dis:networkPositionValue "0.63"^^xsd:float .
+ex:np2 a dis:NetworkPositionAssertion ; dis:networkPositionRole "Amplifier" .
+
+# --- Scenario 4: vulnerability-to-harm pathway (expected: one complete path) ---
+ex:vuln1 a dis:CognitiveOverload ; rdfs:label "Information overload during the election week" .
+ex:effect1 a dis:ImmediateEffect ; dis:immediateEffectDescription "Share of exposed users believing the false claim rose" .
+ex:outcome1 a dis:Outcome ; dis:outcomeDescription "Trust in the electoral commission declined" .
+ex:impact1 a dis:Impact ; dis:impactMagnitude "0.4"^^xsd:float .
+ex:harm1 a dis:Harm ; dis:harmCategory "DISINFORM" ; dis:harmSubCategory "ElectionManipulation" .
+ex:vuln1 dis:vulnerabilityContributesToEffect ex:effect1 .
+ex:effect1 dis:immediateEffectLeadsToOutcome ex:outcome1 .
+ex:outcome1 dis:outcomeManifestsAsImpact ex:impact1 .
+ex:impact1 dis:impactEscalatesToHarm ex:harm1 .
+
+# --- Scenario 5: context-specific topic exploitability (expected: one row, 0.82) ---
+ex:topicMigration a dis:Topic ; dis:topicLabel "Migration" .
+ex:locA a dis:CountryLocation ; dis:locationName "Country A" .
+ex:locB a dis:CountryLocation ; dis:locationName "Country B" .
+ex:ta1 a dis:TopicAssessment ; dis:assessedTopic ex:topicMigration ; dis:assessmentContextLocation ex:locA ;
+    dis:topicExploitabilityScore "0.82"^^xsd:float ; dis:topicAssessmentConfidence "0.7"^^xsd:float .
+ex:ta2 a dis:TopicAssessment ; dis:assessedTopic ex:topicMigration ; dis:assessmentContextLocation ex:locB ;
+    dis:topicExploitabilityScore "0.35"^^xsd:float ; dis:topicAssessmentConfidence "0.6"^^xsd:float .   # below threshold: excluded
+
+# --- Scenario 6: audience progression (expected: six rows in lifecycle order 1-6) ---
+ex:voters a dis:PoliticalAudience ; dis:audienceType "PoliticalAudience" .
+ex:rel4 a dis:AudienceRelationship ; dis:audienceRelationshipType "ExposedAudience"  ; dis:audienceRelationshipStageOrder 4 ; dis:audienceRelationshipConfidence "0.70"^^xsd:float ; dis:relationshipInvolvesAudience ex:voters .
+ex:rel1 a dis:AudienceRelationship ; dis:audienceRelationshipType "IntendedAudience" ; dis:audienceRelationshipStageOrder 1 ; dis:audienceRelationshipConfidence "0.90"^^xsd:float ; dis:relationshipInvolvesAudience ex:voters .
+ex:rel6 a dis:AudienceRelationship ; dis:audienceRelationshipType "AffectedAudience" ; dis:audienceRelationshipStageOrder 6 ; dis:audienceRelationshipConfidence "0.40"^^xsd:float ; dis:relationshipInvolvesAudience ex:voters .
+ex:rel2 a dis:AudienceRelationship ; dis:audienceRelationshipType "PotentialAudience" ; dis:audienceRelationshipStageOrder 2 ; dis:audienceRelationshipConfidence "0.85"^^xsd:float ; dis:relationshipInvolvesAudience ex:voters .
+ex:rel5 a dis:AudienceRelationship ; dis:audienceRelationshipType "EngagedAudience"  ; dis:audienceRelationshipStageOrder 5 ; dis:audienceRelationshipConfidence "0.55"^^xsd:float ; dis:relationshipInvolvesAudience ex:voters .
+ex:rel3 a dis:AudienceRelationship ; dis:audienceRelationshipType "ReachedAudience"  ; dis:audienceRelationshipStageOrder 3 ; dis:audienceRelationshipConfidence "0.80"^^xsd:float ; dis:relationshipInvolvesAudience ex:voters .
+ex:campaign1 dis:audienceRelationshipInstance ex:rel1, ex:rel2, ex:rel3, ex:rel4, ex:rel5, ex:rel6 .
