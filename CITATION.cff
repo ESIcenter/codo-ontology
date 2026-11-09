@@ -1,0 +1,34 @@
+cff-version: 1.2.0
+message: "If you use CODO, please cite it as below."
+title: "CODO: Cognitive Operations Detection Ontology"
+version: 1.0.0
+date-released: 2026-11-09
+type: dataset
+license: CC-BY-4.0
+abstract: >-
+  CODO is an OWL 2 ontology for knowledge-graph representation of
+  disinformation campaigns, influence operations and cognitive warfare.
+  It is organised in five modules (Information and Meaning; Actors and
+  Targeting; Operations; Consequences and Response; Evidence, Assessment
+  and Context), uses qualified relations for attribution, targeting and
+  assessment, and aligns with DISARM v1.6, FIMI, STIX 2.1, MITRE ATT&CK,
+  ABCDE, ENISA, AMAS, RESIST and ETSI TR 104 159.
+keywords:
+  - ontology
+  - OWL
+  - knowledge graph
+  - disinformation
+  - influence operations
+  - cognitive warfare
+  - FIMI
+  - DISARM
+authors:
+  - family-names: Tagarev
+    given-names: Todor
+    affiliation: "Institute of Information and Communication Technologies, Bulgarian Academy of Sciences"
+    orcid: "https://orcid.org/0000-0003-4424-0201"
+  - family-names: Sharkov
+    given-names: George
+    affiliation: "Research and Development and Innovation Consortium, Sofia, Bulgaria"
+    orcid: "https://orcid.org/0000-0001-5086-311X"
+    email: gesha@esicenter.eu
