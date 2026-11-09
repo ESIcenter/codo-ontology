@@ -1,0 +1,23 @@
+{
+  "title": "CODO: Cognitive Operations Detection Ontology",
+  "version": "1.0.0",
+  "upload_type": "dataset",
+  "access_right": "open",
+  "license": "cc-by-4.0",
+  "language": "eng",
+  "creators": [
+    {
+      "name": "Tagarev, Todor",
+      "affiliation": "Institute of Information and Communication Technologies, Bulgarian Academy of Sciences",
+      "orcid": "0000-0003-4424-0201"
+    },
+    {
+      "name": "Sharkov, George",
+      "affiliation": "Research and Development and Innovation Consortium, Sofia, Bulgaria",
+      "orcid": "0000-0001-5086-311X"
+    }
+  ],
+  "description": "<p>CODO (Cognitive Operations Detection Ontology) is an OWL 2 ontology for knowledge-graph representation of disinformation campaigns, influence operations and cognitive warfare. It is organised in five modules: Information and Meaning; Actors and Targeting; Operations; Consequences and Response; and Evidence, Assessment and Context. It separates persistent domain entities from contextual relations and analytical or evidentiary constructs, and uses qualified relations (ActorParticipation, ActorRelationship, TargetingRelation, Assertion and its specialisations) for attribution, targeting and assessment.</p><p>The release contains the ontology (CODO-v1.0.ttl: 187 classes, 472 datatype properties, 252 object properties; self-contained, with a representative subset of DISARM v1.6 as named individuals), six SPARQL competency queries, and a small test graph that exercises them.</p>",
+  "keywords": ["ontology", "OWL", "knowledge graph", "disinformation", "influence operations", "cognitive warfare", "FIMI", "DISARM"],
+  "notes": "Accompanies the article 'CODO: An OWL Ontology for Knowledge-Graph Representation of Disinformation Campaigns and Cognitive Warfare' by T. Tagarev and G. Sharkov (under review)."
+}
