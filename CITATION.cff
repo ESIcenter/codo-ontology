@@ -5,6 +5,8 @@ version: 1.0.0
 date-released: 2026-11-09
 type: dataset
 license: CC-BY-4.0
+doi: 10.5281/zenodo.24086889
+repository-code: "https://github.com/ESIcenter/codo-ontology"
 abstract: >-
   CODO is an OWL 2 ontology for knowledge-graph representation of
   disinformation campaigns, influence operations and cognitive warfare.
@@ -29,6 +31,6 @@ authors:
     orcid: "https://orcid.org/0000-0003-4424-0201"
   - family-names: Sharkov
     given-names: George
-    affiliation: "Research and Development and Innovation Consortium, Sofia, Bulgaria"
+    affiliation: "Institute of Information and Communication Technologies, Bulgarian Academy of Sciences; Research and Development and Innovation Consortium, Sofia, Bulgaria"
     orcid: "https://orcid.org/0000-0001-5086-311X"
     email: gesha@esicenter.eu
